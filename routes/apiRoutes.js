@@ -1,23 +1,59 @@
 var db = require("../models");
+var axios = require('axios');
 
 module.exports = function(app) {
+   
+// Load search page
+  app.get("/search/:meal/:allergy", function(req, res) {
+    console.log(req.params)
+
+var url = `https://api.yummly.com/v1/api/recipes?_app_id=6fe80130&_app_key=e47479bfbd3e29b4ddd5ceb95d60916f&q=${req.params.meal.replace(
+      ' ',
+      '+'
+    )}&requirePictures=true${req.params.allergy.split(',')
+      .map(allergy => {
+        return '&allowedAllergy[]=' + allergy;
+      })
+      .join('')}`;
+    console.log(url);
+
+  axios.get(url)
+  .then(function(response) {
+    res.json(response.data)
+  })
+  });
+
+
   // Get all examples
-  app.get("/api/examples", function(req, res) {
-    db.Example.findAll({}).then(function(dbExamples) {
-      res.json(dbExamples);
+  app.get("/api/recipes", function(req, res) {
+    db.Allergy.findAll({}).then(function(result) {
+      res.json(result);
     });
   });
 
   // Create a new example
-  app.post("/api/examples", function(req, res) {
-    db.Example.create(req.body).then(function(dbExample) {
-      res.json(dbExample);
+  app.post("/api/recipes", function(req, res) {
+    console.log('server:' + req.body)
+
+  db.Allergy.create({
+    meal: req.body.meal,
+    allergy: JSON.stringify(req.body.allergy)
+  }).then(function(result) {
+      res.json(result)
+    });
+    res.redirect('/search')
+  });
+
+  // get search
+  app.get("/search", function(req, res) {
+    db.Allergy.findAll({}).then(function(result) {
+      res.json(result);
     });
   });
 
   // Delete an example by id
   app.delete("/api/examples/:id", function(req, res) {
-    db.Example.destroy({ where: { id: req.params.id } }).then(function(dbExample) {
+    db.Allergy.destroy({ where: { id: req.params.id } }).then(function(dbExample) {
       res.json(dbExample);
     });
   });

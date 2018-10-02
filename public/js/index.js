@@ -4,26 +4,49 @@ $(document).ready(function() {
   $('select').formSelect();
 
 // Get references to page elements
-var $mealText = $("#meal");
-var $diet = $("#example-description");
+var $meal = $("#meal");
+var $allergies = $("#allergy");
 var $submitBtn = $("#submit");
 var $exampleList = $("#example-list");
 
+// functions to use
+function addImages(course, recipe) {
+    // image = $('<img>')
+    // image.attr('src', recipe.smallImageUrls);
+    // image.attr('id', recipe.id);
+
+    var recipeDiv = $('<div>');
+    recipeDiv.addClass('card horizontal');
+    recipeDiv.html(`
+      <div class="card-stacked">
+        <div class="card-content">
+            <img id=${recipe.id} src=${recipe.smallImageUrls}>
+            <br>
+            <a id=${recipe.id} class="recipe">${recipe.id
+      .split('-')
+      .slice(0, -1)
+      .join(' ')}</a>
+        </div>
+      </div>`);
+
+    $('#recipeList').append(recipeDiv);
+  }
+
 // The API object contains methods for each kind of request we'll make
 var API = {
-  saveExample: function(example) {
+  postRecipe: function(recipe) {
     return $.ajax({
       headers: {
         "Content-Type": "application/json"
       },
       type: "POST",
-      url: "api/examples",
-      data: JSON.stringify(example)
+      url: "api/recipes",
+      data: JSON.stringify(recipe)
     });
   },
-  getExamples: function() {
+  getRecipe: function(url) {
     return $.ajax({
-      url: "api/examples",
+      url: url,
       type: "GET"
     });
   },
@@ -90,22 +113,30 @@ var refreshExamples = function() {
 var handleFormSubmit = function(event) {
   event.preventDefault();
 
-  var example = {
-    text: $exampleText.val().trim(),
-    description: $exampleDescription.val().trim()
+  var recipe = {
+    meal: $meal.val(),
+    allergy: $allergies.val()
   };
+  // console.log(recipe)
 
-  if (!(example.text && example.description)) {
-    alert("You must enter an example text and description!");
-    return;
-  }
+var url = `/search/${recipe.meal}/${recipe.allergy}`
 
-  API.saveExample(example).then(function() {
-    refreshExamples();
-  });
+  API.getRecipe(url).then(res => {
+    $('#recipeList').empty();
+        console.log(res);
+        for (var i = 1; i < res.matches.length; i++) {
+          var image;
+          if (res.matches[i].attributes.course !== undefined) {
+            // console.log(res.matches[i].attributes.course);
+            addImages(res.matches[i].attributes.course[0], res.matches[i]);
+          }
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
 
-  $exampleText.val("");
-  $exampleDescription.val("");
+  $meal.val("");
 };
 
 // handleDeleteBtnClick is called when an example's delete button is clicked
