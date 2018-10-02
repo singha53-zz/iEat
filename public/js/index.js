@@ -1,6 +1,11 @@
+$(document).ready(function() {
+  // Materlize functionality
+  $('.sidenav').sidenav();
+  $('select').formSelect();
+
 // Get references to page elements
-var $exampleText = $("#example-text");
-var $exampleDescription = $("#example-description");
+var $mealText = $("#meal");
+var $diet = $("#example-description");
 var $submitBtn = $("#submit");
 var $exampleList = $("#example-list");
 
@@ -61,6 +66,27 @@ var refreshExamples = function() {
 
 // handleFormSubmit is called whenever we submit a new example
 // Save the new example to the db and refresh the list
+// var handleFormSubmit = function(event) {
+//   event.preventDefault();
+
+//   var example = {
+//     text: $exampleText.val().trim(),
+//     description: $exampleDescription.val().trim()
+//   };
+
+//   if (!(example.text && example.description)) {
+//     alert("You must enter an example text and description!");
+//     return;
+//   }
+
+//   API.saveExample(example).then(function() {
+//     refreshExamples();
+//   });
+
+//   $exampleText.val("");
+//   $exampleDescription.val("");
+// };
+
 var handleFormSubmit = function(event) {
   event.preventDefault();
 
@@ -97,3 +123,5 @@ var handleDeleteBtnClick = function() {
 // Add event listeners to the submit and delete buttons
 $submitBtn.on("click", handleFormSubmit);
 $exampleList.on("click", ".delete", handleDeleteBtnClick);
+
+})

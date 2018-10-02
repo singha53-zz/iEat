@@ -1,33 +1,161 @@
-<div id="home">
+<nav>
+    <div class="nav-wrapper">
+      <img src="assets/Images/EatSmart-logo1.jpg" alt="logo" class="brand-logo" height="56">
+      <!-- <a href="#!" class="brand-logo">EatSmart</a> -->
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger">
+        <i class="material-icons">menu</i>
+      </a>
+      <ul class="right hide-on-med-and-down">
+        <li>
+          <a href="howitworks.html">How it works</a>
+        </li>
+        <li>
+          <a class="dropdown-trigger" href="#!" data-target="dropdown1">Favourites
+            <i class="material-icons right">arrow_drop_down</i>
+          </a>
+        </li>
+        <li class="register">
+          <a href="registerindex.html">Register</a>
+        </li>
+        <li class="sign-in-email">
+          <a href="signin.html">Log In</a>
+        </li>
+        <li class="hidden profile-page">
+          <a href="profile.html">Profile</a>
+        </li>
+        <li class="hidden log-out">
+          <a href="index.html">Log Out</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Dropdown Structure for favourites for navbar -->
+  <ul id="dropdown1" class="dropdown-content">
+  </ul>
+
+  <!-- side bar when navbar collapses -->
+  <ul class="sidenav" id="mobile-demo">
+    <li>
+      <a href="howitworks.html">How it works</a>
+    </li>
+    <li>
+      <a class="dropdown-trigger" href="#!" data-target="dropdown2">Favourites
+        <i class="material-icons right">arrow_drop_down</i>
+      </a>
+    </li>
+    <li class="register">
+      <a href="registerindex.html">Register</a>
+    </li>
+    <li class="sign-in-email">
+      <a href="signin.html">Log In</a>
+    </li>
+    <li class="hidden profile-page">
+      <a href="profile.html">Profile</a>
+    </li>
+    <li class="hidden log-out">
+      <a href="index.html">Log Out</a>
+    </li>
+  </ul>
+
+  <!-- Dropdown Structure for favourites for sidebar -->
+  <ul id="dropdown2" class="dropdown-content">
+  </ul>
+
+  <!-- body -->
   <div class="container">
     <div class="row">
-      <div class="col-8 offset-2">
-        <h1>{{msg}}</h1>
-        <h2>This is our Home Page!</h2>
-        <form class="clearfix mb-4" action="POST">
-          <div class="form-group">
-            <label for="example-text">Example Text</label>
-            <input type="text" id="example-text" class="form-control" aria-describedby="example-text" placeholder="Enter Example Text">
-          </div>
-          <div class="form-group">
-            <label for="example-description">Example Description</label>
-            <textarea class="form-control" id="example-description" aria-describedby="example-description" placeholder="Enter Example Description"></textarea>
-          </div>
-          <button id="submit" class="btn btn-primary float-right">Submit</button>
-        </form>
-        <h3>Examples:</h3>
-        <ul id="example-list" class="list-group">
-          {{#each examples}}
-          <li data-id="{{this.id}}" class="list-group-item">
-            <a href="example/{{this.id}}">{{this.text}}</a>
-            <button class="btn btn-danger float-right delete">ｘ</button>
-          </li>
-          {{/each}}
-        </ul>
+      <div class="col s3">
+
+        <div id="recipeList" style="padding-top: 1rem; overflow: auto;max-height: 120vh;"></div>
+
+      </div>
+      <div class="col s6">
+
+ <form action="/POST">
+        <!-- enter dish -->
+        <div class="input-field">
+          <i class="material-icons prefix">mode_edit</i>
+          <textarea id="meal" class="materialize-textarea"></textarea>
+          <label for="meal">Enter dish: </label>
+        </div>
+
+        <!-- select allergies -->
+        <div class="input-field">
+          <select multiple id="allergy">
+            <option value="" disabled selected>Choose your allergy</option>
+            <option value="393^Gluten-Free">Gluten Free</option>
+            <option value="394^Peanut-Free">Peanut Free</option>
+            <option value="398^Seafood-Free">Seafood Free</option>
+            <option value="399^Sesame-Free">Sesame Free</option>
+            <option value="400^Soy-Free">Soy Free</option>
+            <option value="396^Dairy-Free">Dairy Free</option>
+            <option value="397^Egg-Free">Egg Free</option>
+            <option value="401^Sulfite-Free">Sulfite Free</option>
+            <option value="395^Tree Nut-Free">Tree Nut-Free</option>
+            <option value="392^Wheat-Free">Wheat-Free</option>
+          </select>
+          <label>Allergies?</label>
+        </div>
+
+        <!-- Search recipe -->
+        <button class="btn waves-effect waves-light" type="submit" name="action" id="submit">Search
+          <i class="material-icons right">send</i>
+        </button> 
+
+  </form>
+        <hr>
+        <div id="recipeDisplay" style="padding-top: 1rem; overflow: auto;min-height: 53vh; max-height: 53vh;"></div>
+        <div id="recipeDay"></div>
+        <div id="recipeContent" style="padding-top: 1rem; overflow: auto;min-height: 1vh; max-height: 60vh;"></div>
+        <div id="recipeButtons">
+
+        </div>
+
+      </div>
+      <div class="col s3">
+
+        <!-- Breakfast -->
+        <h1 id="day"></h1>
+        <table>
+          <thead>
+            <th class="textcenter">Breakfast</th>
+          </thead>
+          <tbody id="breakfast">
+          </tbody>
+        </table>
+
+        <!-- Lunch -->
+        <table>
+          <thead>
+            <th class="textcenter">Lunch</th>
+          </thead>
+          <tbody id="lunch">
+          </tbody>
+        </table>
+
+        <!-- Main -->
+        <table>
+          <thead>
+            <th class="textcenter">Dinner</th>
+          </thead>
+          <tbody id="dinner">
+          </tbody>
+        </table>
+
+        <!-- Snacks -->
+        <table>
+          <thead>
+            <th class="textcenter">Snacks</th>
+          </thead>
+          <tbody id="snack">
+          </tbody>
+        </table>
+
       </div>
     </div>
   </div>
-</div>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
 <script src="/js/index.js"></script>
