@@ -67,9 +67,7 @@
     <div class="row">
       <div class="col s3">
 
-        <div id="recipeList" style="padding-top: 1rem; overflow: auto;max-height: 120vh;"></div>
-
-
+        <div id="recipeList" style="padding-top: 1rem; overflow: auto;max-height: 90vh;">
 
 <div class="card horizontal">
       <div class="card-stacked">
@@ -99,43 +97,9 @@
             <br>
             <a id="Bubble-Pizza-2082798" class="recipe">Bubble Pizza</a>
         </div>
-      </div></div><div class="card horizontal">
-      <div class="card-stacked">
-        <div class="card-content">
-            <img id="Naan-Pizza-1601315" src="https://lh3.googleusercontent.com/Cf438g4Mrkk-qWNWbM93uJOdVS4UzX5pJD0f18-kibbJlUwKlXJtO9MwDP6LRWpxxQfUBkqQmPEnm92ESpdglU4=s90">
-            <br>
-            <a id="Naan-Pizza-1601315" class="recipe">Naan Pizza</a>
-        </div>
-      </div></div><div class="card horizontal">
-      <div class="card-stacked">
-        <div class="card-content">
-            <img id="BLT-Pizza-1088818" src="http://lh3.googleusercontent.com/AO_pS6eDFQ4QSpu3zgJVpr-y7vFGIua6l87i545Z2JL2nm3RnUY-iqSlQEx81KBNIoeQd-jeSmvWxcPBPnvG2w=s90">
-            <br>
-            <a id="BLT-Pizza-1088818" class="recipe">BLT Pizza</a>
-        </div>
-      </div></div><div class="card horizontal">
-      <div class="card-stacked">
-        <div class="card-content">
-            <img id="Hawaiian-Pizza-1303827" src="http://lh3.googleusercontent.com/tSq_16RAOBDZ5yuqxbelM1PEnAYtJAPAoiR8Z61gxPdgTuOwCUUH1_rY5RdRgXtw08ku_65KnN9dASz5kRypnA=s90">
-            <br>
-            <a id="Hawaiian-Pizza-1303827" class="recipe">Hawaiian Pizza</a>
-        </div>
-      </div></div><div class="card horizontal">
-      <div class="card-stacked">
-        <div class="card-content">
-            <img id="Antipasto-Pizza-2513010" src="https://lh3.googleusercontent.com/XXxhQEnKqw2cQbwKfNoU0kj9PtE3JCb8QNmMJRi806WAZY9PIWXhnVet-xWgDmUIdKt_pxFAMgpDjBxkjv4dww=s90">
-            <br>
-            <a id="Antipasto-Pizza-2513010" class="recipe">Antipasto Pizza</a>
-        </div>
-      </div></div><div class="card horizontal">
-      <div class="card-stacked">
-        <div class="card-content">
-            <img id="Pepperoni-Pizza-2503513" src="https://lh3.googleusercontent.com/m_GUJL96fAPITVLoVYcDdIUadcUBjkB90Op5-3elg9ayrQP5R0aqgtaqZ5oDOF1rJ89IvkupbGBr6eTntY_XSQ=s90">
-            <br>
-            <a id="Pepperoni-Pizza-2503513" class="recipe">Pepperoni Pizza</a>
-        </div>
       </div></div>
-
+      
+</div>
       </div>
 
       <div class="col s6">
@@ -203,68 +167,75 @@
 
   <!-- Dropdown Structure -->
   <ul id='dropdown5' class='dropdown-content'>
-    <li><a id="breakfast" href="#!">Breakfast</a></li>
-    <li><a id="lunch" href="#!">Lunch</a></li>
-    <li><a id="dinner" href="#!">Dinner</a></li>
-    <li><a id="snacks" href="#!">Snacks</a></li>
+    <li><a class="add" id="breakfast" href="#!">Breakfast</a></li>
+    <li><a class="add" id="lunch" href="#!">Lunch</a></li>
+    <li><a class="add" id="dinner" href="#!">Dinner</a></li>
+    <li><a class="add" id="snacks" href="#!">Snacks</a></li>
   </ul>
+
+
+  
 </div>
  </div>
 
-<ul id="tabs-swipe-demo" class="tabs text-center">
-    <li class="tab col s1"><a class="active" href="#sun">S</a></li>
-    <li class="tab col s1"><a href="#mon">M</a></li>
-    <li class="tab col s1"><a href="#tues">T</a></li>
-    <li class="tab col s1"><a href="#wednes">W</a></li>
-    <li class="tab col s1"><a href="#thurs">T</a></li>
-    <li class="tab col s1"><a href="#fri">F</a></li>
-    <li class="tab col s1"><a href="#satur">S</a></li>
+
+<ul id="tabs-swipe-demo" class="tabs col-center-block">
+    <li class="tab col s1"><a id="sunday" class="active" href="#sun">S</a></li>
+    <li class="tab col s1"><a id="monday" href="#mon">M</a></li>
+    <li class="tab col s1"><a id="tuesday" href="#tues">T</a></li>
+    <li class="tab col s1"><a id="wednesday" href="#wednes">W</a></li>
+    <li class="tab col s1"><a id="thursday" href="#thurs">T</a></li>
+    <li class="tab col s1"><a id="friday" href="#fri">F</a></li>
+    <li class="tab col s1"><a id="saturday" href="#satur">S</a></li>
   </ul>
+
   <div id="sun" class="col s12">
     <!-- Default with no input (automatically generated)  -->
-  <div id="sun-breakfast" class="chips chips-placeholder"></div>
-  <div id="sun-lunch" class="chips chips-placeholder"></div>
-  <div id="sun-dinner" class="chips chips-placeholder"></div>
+  <div id="sunday-breakfast" class="chips chips-placeholder">
+  </div>
+  <div id="sunday-lunch" class="chips chips-placeholder"></div>
+  <div id="sunday-dinner" class="chips chips-placeholder"></div>
   </div>
   <div id="mon" class="col s12">
-    <div id="mon-breakfast" class="chips chips-placeholder"></div>
-  <div id="mon-lunch" class="chips chips-placeholder"></div>
-  <div id="mon-dinner" class="chips chips-placeholder"></div>
+    <div id="monday-breakfast" class="chips chips-placeholder"></div>
+  <div id="monday-lunch" class="chips chips-placeholder"></div>
+  <div id="monday-dinner" class="chips chips-placeholder"></div>
   </div>
   <div id="tues" class="col s12">
-    <div id="tues-breakfast" class="chips chips-placeholder"></div>
-  <div id="tues-lunch" class="chips chips-placeholder"></div>
-  <div id="tues-dinner" class="chips chips-placeholder"></div>
+    <div id="tuesday-breakfast" class="chips chips-placeholder"></div>
+  <div id="tuesday-lunch" class="chips chips-placeholder"></div>
+  <div id="tuesday-dinner" class="chips chips-placeholder"></div>
   </div>
   <div id="wednes" class="col s12">
-    <div id="wednes-breakfast" class="chips chips-placeholder"></div>
-  <div id="wednes-lunch" class="chips chips-placeholder"></div>
-  <div id="wednes-dinner" class="chips chips-placeholder"></div>
+    <div id="wednesday-breakfast" class="chips chips-placeholder"></div>
+  <div id="wednesday-lunch" class="chips chips-placeholder"></div>
+  <div id="wednesday-dinner" class="chips chips-placeholder"></div>
   </div>
   <div id="thurs" class="col s12">
-    <div id="thurs-breakfast" class="chips chips-placeholder"></div>
-  <div id="thurs-lunch" class="chips chips-placeholder"></div>
-  <div id="thurs-dinner" class="chips chips-placeholder"></div>
+    <div id="thursday-breakfast" class="chips chips-placeholder"></div>
+  <div id="thursday-lunch" class="chips chips-placeholder"></div>
+  <div id="thursday-dinner" class="chips chips-placeholder"></div>
   </div>
   <div id="fri" class="col s12">
-    <div id="fri-breakfast" class="chips chips-placeholder"></div>
-  <div id="fri-lunch" class="chips chips-placeholder"></div>
-  <div id="fri-dinner" class="chips chips-placeholder"></div>
+    <div id="friday-breakfast" class="chips chips-placeholder"></div>
+  <div id="friday-lunch" class="chips chips-placeholder"></div>
+  <div id="friday-dinner" class="chips chips-placeholder"></div>
   </div>
   <div id="satur" class="col s12">
-    <div id="sat-breakfast" class="chips chips-placeholder"></div>
-  <div id="sat-lunch" class="chips chips-placeholder"></div>
-  <div id="sat-dinner" class="chips chips-placeholder"></div>
+    <div id="saturday-breakfast" class="chips chips-placeholder"></div>
+  <div id="saturday-lunch" class="chips chips-placeholder"></div>
+  <div id="saturday-dinner" class="chips chips-placeholder"></div>
   </div>
        </div>
       
       <div class="col s3">
-<div class="piechart"> add pie chart </div>
+<div id="piechart"> </div>
       </div>
     </div>
   </div>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+ <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="/js/index.js"></script>
 
