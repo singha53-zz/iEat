@@ -2,10 +2,9 @@ var db = require("../models");
 var axios = require('axios');
 
 module.exports = function(app) {
-   
-// Load search page
+
+// search a given recipe keyword
   app.get("/search/:meal/:allergy", function(req, res) {
-    console.log(req.params)
 
 var url = `https://api.yummly.com/v1/api/recipes?_app_id=6fe80130&_app_key=e47479bfbd3e29b4ddd5ceb95d60916f&q=${req.params.meal.replace(
       ' ',
@@ -23,6 +22,18 @@ var url = `https://api.yummly.com/v1/api/recipes?_app_id=6fe80130&_app_key=e4747
   })
   });
 
+//  search for a given recipe
+app.get("/search/:recipe", function(req, res) {
+    console.log(req.params)
+    var url = 'https://api.yummly.com/v1/api/recipe/' +
+      req.params.recipe +
+      '?_app_id=6fe80130&_app_key=e47479bfbd3e29b4ddd5ceb95d60916f';
+
+      axios.get(url)
+  .then(function(response) {
+    res.json(response.data)
+  })
+})
 
   // Get all examples
   app.get("/api/recipes", function(req, res) {

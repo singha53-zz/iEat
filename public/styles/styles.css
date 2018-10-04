@@ -6,6 +6,16 @@ html {
   min-height: 100%;
 }
 
+hr { 
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 0px;
+}
+
 /* hide sign in buttons */
 .hidden {
   visibility: hidden;
@@ -215,3 +225,8 @@ a, li, p {
   max-height: 30%;
   overflow: auto;
 }
+
+.text-center > div {
+        display: inline-block;
+        float: none;
+    }
