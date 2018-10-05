@@ -4,12 +4,12 @@ $(document).ready(function() {
   $('select').formSelect();
   $('.dropdown-trigger').dropdown();
   $('.tabs').tabs();
+// delete chip on click
+  $(document).on('click', '.close', function(event) {
+    console.log($(this).parent().remove())
 
-  $('.close').on('click', function(e){
-    console.log(event.currentTarget.id)
-    var ref_this = $("ul.tabs li a").find(".active");
-        console.log(ref_this);
   })
+
 
   $('#sunday-breakfast').chips({placeholder: 'Breakfast',secondaryPlaceholder: '+Tag'});
   $('#sunday-lunch').chips({placeholder: 'Lunch',secondaryPlaceholder: '+Tag'});
@@ -218,20 +218,21 @@ var handleDeleteBtnClick = function() {
 $submitBtn.on("click", handleFormSubmit);
 
 var nutrientData=[
-{nutrient:'FAT_KCAL',estimate:{}}
-,{nutrient:'FASAT',estimate:{}}
-,{nutrient:'FOLDFE',estimate:{}}
-,{nutrient:'ENERC_KJ',estimate:{}}
-,{nutrient:'WATER',estimate:{}}
-,{nutrient:'FAMS',estimate:{}}
-,{nutrient:'FIBTG',estimate:{}}
-,{nutrient:'PROCNT',estimate:{}}
-,{nutrient:'CHOCDF',estimate:{}}
-,{nutrient:'CHOLE',estimate:{}}
-,{nutrient:'FAPU',estimate:{}}
-,{nutrient:'VITA_IU',estimate:{}}
-,{nutrient:'ENERC_KCAL',estimate:{}}
+{State:'FAT_KCAL',freq:{}}
+,{State:'FASAT',freq:{}}
+,{State:'FOLDFE',freq:{}}
+// ,{State:'ENERC_KJ',freq:{}}
+,{State:'WATER',freq:{}}
+,{State:'FAMS',freq:{}}
+,{State:'FIBTG',freq:{}}
+,{State:'PROCNT',freq:{}}
+,{State:'CHOCDF',freq:{}}
+,{State:'CHOLE',freq:{}}
+,{State:'FAPU',freq:{}}
+// ,{State:'VITA_IU',freq:{}}
+// ,{State:'ENERC_KCAL',freq:{}}
 ];
+
 // add recipe to database
 $(document).on('click', '.add', function(event) {
   var ref_this = $("ul.tabs li a.active");
@@ -243,51 +244,62 @@ $(document).on('click', '.add', function(event) {
 
 // ## extract recipe id
 var recipeID = $('#selectRecipe div:first').children().attr('id');
-
+console.log(recipeID)
   var url = `/search/${recipeID}/`
 
-API.getRecipe(url).then(res => {
-
+  API.getRecipe(url).then(res => {
+    console.log(res.nutritionEstimates.length)
+    console.log(res.nutritionEstimates)
   // console.log(res.nutritionEstimates.filter(x => {
   //   console.log(x.attribute)
   //   nutrientData.map(y => {
   //     console.log(y.nutrient)
   //     y.nutrient}).includes(x.attribute)
   // }))
-
-for (let i = 0; i < nutrientData.length; i++) {
-  nutrientData[i].estimate[recipeID] =  res.nutritionEstimates.filter(d => {
-  return d.attribute === nutrientData[i].nutrient
-})[0].value
+if(res.nutritionEstimates.length >0){
+  for (let i = 0; i < nutrientData.length; i++) {
+  nutrientData[i].freq[recipeID] =  res.nutritionEstimates.filter(d => {
+  return d.attribute === nutrientData[i].State
+  })[0].value
+  }
+  console.log(nutrientData)
+  $('#piechart').empty();
+  dashboard('#piechart', nutrientData);
 }
-console.log(nutrientData)
 
   })
-
 
 })
 
 
-// $('#tabs-swipe-demo').on('click', function(e){
-//   console.log(e)
-//   element.classList.contains("active")
-// })
-
-$('ul.tabs').on('click', 'a', function(e) {
-    console.log(e.target)
-});
 
 
-function dashboard(id, fData, colors){
+function dashboard(id, fData){
+
+    function colores_google(n) {
+  var colores_g = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
+  return colores_g[n % colores_g.length];
+  }
+  var colors = {};
+  for (let i = 0; i < Object.keys(fData[0].freq).length; i++) {
+  colors[Object.keys(fData[0].freq)[i]] = colores_google(i)
+  }
+
     var barColor = 'steelblue';
-    function segColor(c){ return colors[c]; }
+    function segColor(c){ return colors[c]; } 
     
     // compute total for each state.
-    fData.forEach(function(d){d.total=d.freq.low+d.freq.mid+d.freq.high;});
-    
+    // fData.forEach(function(d){d.total=d.freq.low+d.freq.mid+d.freq.high;});
+    fData.forEach(d =>{
+  d.total=0;
+  for (let i = 0; i < Object.keys(d.freq).length; i++) {
+    d.total += d.freq[Object.keys(d.freq)[i]]
+  }
+})
+
     // function to handle histogram.
     function histoGram(fD){
-        var hG={},    hGDim = {t: 60, r: 0, b: 30, l: 0};
+        var hG={},    hGDim = {t: 60, r: 0, b: 50, l: 0};
         hGDim.w = 250 - hGDim.l - hGDim.r, 
         hGDim.h = 300 - hGDim.t - hGDim.b;
             
@@ -304,7 +316,12 @@ function dashboard(id, fData, colors){
         // Add x-axis to the histogram svg.
         hGsvg.append("g").attr("class", "x axis")
             .attr("transform", "translate(0," + hGDim.h + ")")
-            .call(d3.svg.axis().scale(x).orient("bottom"));
+            .call(d3.svg.axis().scale(x).orient("bottom")).selectAll("text")
+    .attr("y", 0)
+    .attr("x", 9)
+    .attr("dy", ".35em")
+    .attr("transform", "rotate(90)")
+    .style("text-anchor", "start");
 
         // Create function for y-axis map.
         var y = d3.scale.linear().range([hGDim.h, 0])
@@ -325,7 +342,7 @@ function dashboard(id, fData, colors){
             .on("mouseout",mouseout);// mouseout is defined below.
             
         //Create the frequency labels above the rectangles.
-        bars.append("text").text(function(d){ return d3.format(",")(d[1])})
+        bars.append("text").text(function(d){ return d3.format(".0f")(d[1])})
             .attr("x", function(d) { return x(d[0])+x.rangeBand()/2; })
             .attr("y", function(d) { return y(d[1])-5; })
             .attr("text-anchor", "middle");
@@ -362,7 +379,7 @@ function dashboard(id, fData, colors){
 
             // transition the frequency labels location and change value.
             bars.select("text").transition().duration(500)
-                .text(function(d){ return d3.format(",")(d[1])})
+                .text(function(d){ return d3.format(".0f")(d[1])})
                 .attr("y", function(d) {return y(d[1])-5; });            
         }        
         return hG;
@@ -377,7 +394,7 @@ function dashboard(id, fData, colors){
         var piesvg = d3.select(id).append("svg")
             .attr("width", pieDim.w).attr("height", pieDim.h).append("g")
             .attr("transform", "translate("+pieDim.w/2+","+pieDim.h/2+")");
-        
+
         // create function to draw the arcs of the pie slices.
         var arc = d3.svg.arc().outerRadius(pieDim.r - 10).innerRadius(0);
 
@@ -428,8 +445,8 @@ function dashboard(id, fData, colors){
         var tr = legend.append("tbody").selectAll("tr").data(lD).enter().append("tr");
             
         // create the first column for each segment.
-        tr.append("td").append("svg").attr("width", '16').attr("height", '16').append("rect")
-            .attr("width", '16').attr("height", '16')
+        tr.append("td").append("svg").attr("width", '105').attr("height", '10').append("rect")
+            .attr("width", '105').attr("height", '10')
 			.attr("fill",function(d){ return segColor(d.type); });
             
         // create the second column for each segment.
@@ -437,7 +454,7 @@ function dashboard(id, fData, colors){
 
         // create the third column for each segment.
         tr.append("td").attr("class",'legendFreq')
-            .text(function(d){ return d3.format(",")(d.freq);});
+            .text(function(d){ return d3.format(".0f")(d.freq);});
 
         // create the fourth column for each segment.
         tr.append("td").attr("class",'legendPerc')
@@ -449,7 +466,7 @@ function dashboard(id, fData, colors){
             var l = legend.select("tbody").selectAll("tr").data(nD);
 
             // update the frequencies.
-            l.select(".legendFreq").text(function(d){ return d3.format(",")(d.freq);});
+            l.select(".legendFreq").text(function(d){ return d3.format(".0f")(d.freq);});
 
             // update the percentage column.
             l.select(".legendPerc").text(function(d){ return getLegend(d,nD);});        
@@ -463,7 +480,7 @@ function dashboard(id, fData, colors){
     }
     
     // calculate total frequency by segment for all state.
-    var tF = ['low','mid','high'].map(function(d){ 
+    var tF = Object.keys(colors).map(function(d){ 
         return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))}; 
     });    
     
@@ -488,6 +505,5 @@ var freqData=[
 ,{State:'KS',freq:{low:162, mid:379, high:471}}
 ];
 
-var colors = {low:"#807dba", mid:"#e08214",high:"#41ab5d"}
-dashboard('#piechart', freqData, colors);
+// dashboard('#piechart', freqData);
 })
