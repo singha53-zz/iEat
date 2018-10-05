@@ -196,9 +196,7 @@ $('#selectRecipe').empty();
           </div>
           </div>
         </div>
-
               `)
-
   })
 })
 
@@ -235,6 +233,8 @@ var nutrientData=[
 
 // add recipe to database
 $(document).on('click', '.add', function(event) {
+
+  // add chips to calendar
   var ref_this = $("ul.tabs li a.active");
   console.log(ref_this[0].id+'-'+event.target.id);
   $('#'+ref_this[0].id+'-'+event.target.id).append(`  <div class="chip">
