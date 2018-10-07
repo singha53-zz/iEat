@@ -3,6 +3,24 @@ var axios = require('axios');
 
 module.exports = function(app) {
 
+app.get('/register', function(req, res){
+  res.render("register");
+})
+
+app.post('/register', function(req, res){
+  // res.send("registered!")
+  db.User.register(new db.User({username: req.body.username}), req.body.password, function(err, user){
+    if(err){
+      console.log(err);
+      return res.render('register')
+    } 
+    passport.authenticate("local")(req, res, function(){
+      res.redirect('/');
+    })
+  });
+})
+
+
 // search a given recipe keyword
   app.get("/search/:meal/:allergy", function(req, res) {
 
