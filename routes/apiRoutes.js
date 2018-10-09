@@ -3,28 +3,10 @@ var axios = require('axios');
 
 module.exports = function(app) {
 
-app.get('/register', function(req, res){
-  res.render("register");
-})
-
-app.post('/register', function(req, res){
-  // res.send("registered!")
-  db.User.register(new db.User({username: req.body.username}), req.body.password, function(err, user){
-    if(err){
-      console.log(err);
-      return res.render('register')
-    } 
-    passport.authenticate("local")(req, res, function(){
-      res.redirect('/');
-    })
-  });
-})
-
-
 // search a given recipe keyword
-  app.get("/search/:meal/:allergy", function(req, res) {
+app.get("/search/:meal/:allergy", function(req, res) {
 
-var url = `https://api.yummly.com/v1/api/recipes?_app_id=6fe80130&_app_key=e47479bfbd3e29b4ddd5ceb95d60916f&q=${req.params.meal.replace(
+  var url = `https://api.yummly.com/v1/api/recipes?_app_id=6fe80130&_app_key=e47479bfbd3e29b4ddd5ceb95d60916f&q=${req.params.meal.replace(
       ' ',
       '+'
     )}&requirePictures=true${req.params.allergy.split(',')
@@ -49,11 +31,9 @@ app.get("/search/:recipe", function(req, res) {
       req.params.recipe +
       '?_app_id=6fe80130&_app_key=e47479bfbd3e29b4ddd5ceb95d60916f';
 
-
-
-
       axios.get(url)
   .then(function(response) {
+    
     res.json(response.data)
   })
 })

@@ -39,6 +39,7 @@ var API = {
     console.log($(this).parent().remove())
    console.log($(this).parent()[0].id)
    API.deleteRecipe($(this).parent()[0].id)
+       window.location.reload()
    window.getRecipes()
 
   })
@@ -184,6 +185,7 @@ counter = 0;
   console.log( window.location)
   console.log(event.currentTarget.id)
 var recipe = event.currentTarget.id;
+console.log(recipe)
   var url = `/search/${recipe}/`
 
 API.getRecipe(url).then(res => {
@@ -194,7 +196,8 @@ var recipeObj = {name: res.name,
   time:res.totalTime,
   feeds:res.numberOfServings,
   ingredients:res.ingredientLines.length,
-  recipeUrl:res.images[0].hostedMediumUrl
+  imageUrl:res.images[0].hostedMediumUrl,
+  recipeUrl:res.source.sourceRecipeUrl
   }
 if(res.nutritionEstimates.length < 1){
 recipeObj.calories = "NA"
@@ -217,7 +220,7 @@ document.getElementById("recipeName").innerHTML = recipeObj.name
 $('#selectRecipe').empty();
  $('#selectRecipe').append(`<div class="row">
           <div id=${res.id} class="col s6">
-          <img "materialboxed" src = ${recipeObj.recipeUrl}>
+          <img "materialboxed" src = ${recipeObj.imageUrl}>
           </div>
           <div class="col s6">
           <div class="row">
@@ -234,6 +237,8 @@ $('#selectRecipe').empty();
 //  save data to window
  window.recipeInfo = recipeObj
 
+  }).catch(err => {
+    console.log(err)
   })
 })
 
@@ -297,6 +302,7 @@ $(document).on('click', '.add', function(event) {
 console.log(addRecipe)
   // add chips to calendar
   var ref_this = $("ul.tabs li a.active");
+  console.log(`${ref_this[0].id}-${event.target.id}`)
   addRecipe.calendar = `${ref_this[0].id}-${event.target.id}`;
 
 
@@ -315,9 +321,11 @@ console.log(addRecipe.nutritionEstimates)
 if(addRecipe.nutritionEstimates !== null){
 var nutrientData = window.nutrientData;
 var nutritionEstimates = JSON.parse(addRecipe.nutritionEstimates)
-console.log(nutrientData)
+console.log(nutrientData);
+console.log(nutritionEstimates)
   for (let i = 0; i < nutrientData.length; i++) {
   nutrientData[i].freq[addRecipe.recipeID] =  nutritionEstimates.filter(d => {
+    console.log(d.attribute === nutrientData[i].State)
   return d.attribute === nutrientData[i].State
   })[0].value
   }
@@ -357,11 +365,12 @@ console.log(addRecipe)
 //   })
   }
   counter++
-console.log(counter)
 
 })
 
-
+$(document).on('click', '#getRecipe', function(event) {
+$("#getRecipe").attr("href",  window.recipeInfo.sourceRecipeUrl)
+})
 
 
 
