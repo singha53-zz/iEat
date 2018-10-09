@@ -33,7 +33,7 @@ module.exports = function(sequelize, Sequelize) {
             type: Sequelize.TEXT,
             notEmpty: true
         },
-        nutrientData: {
+        nutritionEstimates: {
             type: Sequelize.TEXT,
             notEmpty: true
         }

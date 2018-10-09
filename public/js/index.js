@@ -1,12 +1,45 @@
 $(document).ready(function() {
+var counter = 0;
+
   // Materlize functionality
   $('.sidenav').sidenav();
   $('select').formSelect();
   $('.dropdown-trigger').dropdown();
   $('.tabs').tabs();
+
+// The API object contains methods for each kind of request we'll make
+var API = {
+  postRecipe: function(recipe) {
+    return $.ajax({
+      headers: {
+        "Content-Type": "application/json"
+      },
+      type: "POST",
+      url: "api/recipes",
+      data: JSON.stringify(recipe)
+    });
+  },
+  getRecipe: function(url) {
+    return $.ajax({
+      url: url,
+      type: "GET"
+    });
+  },
+  deleteRecipe: function(id) {
+    return $.ajax({
+      url: "api/recipe/" + id,
+      type: "DELETE"
+    });
+  }
+};
+
+
 // delete chip on click
   $(document).on('click', '.close', function(event) {
     console.log($(this).parent().remove())
+   console.log($(this).parent()[0].id)
+   API.deleteRecipe($(this).parent()[0].id)
+   window.getRecipes()
 
   })
 
@@ -61,32 +94,6 @@ function addImages(course, recipe) {
 
     $('#recipeList').append(recipeDiv);
   }
-
-// The API object contains methods for each kind of request we'll make
-var API = {
-  postRecipe: function(recipe) {
-    return $.ajax({
-      headers: {
-        "Content-Type": "application/json"
-      },
-      type: "POST",
-      url: "api/recipes",
-      data: JSON.stringify(recipe)
-    });
-  },
-  getRecipe: function(url) {
-    return $.ajax({
-      url: url,
-      type: "GET"
-    });
-  },
-  deleteExample: function(id) {
-    return $.ajax({
-      url: "api/examples/" + id,
-      type: "DELETE"
-    });
-  }
-};
 
 // refreshExamples gets new examples from the db and repopulates the list
 var refreshExamples = function() {
@@ -172,6 +179,7 @@ console.log(url)
 
 // clicking on a recipe
 $(document).on('click', '.recipe', function(event) {
+counter = 0;
 
   console.log( window.location)
   console.log(event.currentTarget.id)
@@ -190,12 +198,14 @@ var recipeObj = {name: res.name,
   }
 if(res.nutritionEstimates.length < 1){
 recipeObj.calories = "NA"
+recipeObj.nutritionEstimates = null
 recipeObj.nutritionEstimatesAvail = `<div id="recipeServes" class="col s12">Nutritional information <span style="color:red;"> not </span> available</div>`
 } else {
   // console.log(res.nutritionEstimates[72].value)
 recipeObj.calories = res.nutritionEstimates.filter(d => {
   return d.attribute === "ENERC_KCAL"
 })[0].value
+recipeObj.nutritionEstimates = JSON.stringify(res.nutritionEstimates)
 recipeObj.nutritionEstimatesAvail = `<div id="recipeServes" class="col s12">Nutritional information available</div>`
 
 }
@@ -242,79 +252,81 @@ var handleDeleteBtnClick = function() {
 // Add event listeners to the submit and delete buttons
 $submitBtn.on("click", handleFormSubmit);
 
-var nutrientData=[
-    {State:'FAT_KCAL',freq:{}}
-    ,{State:'FASAT',freq:{}}
-    ,{State:'FOLDFE',freq:{}}
-    // ,{State:'ENERC_KJ',freq:{}}
-    ,{State:'WATER',freq:{}}
-    ,{State:'FAMS',freq:{}}
-    ,{State:'FIBTG',freq:{}}
-    ,{State:'PROCNT',freq:{}}
-    ,{State:'CHOCDF',freq:{}}
-    ,{State:'CHOLE',freq:{}}
-    ,{State:'FAPU',freq:{}}
-    // ,{State:'VITA_IU',freq:{}}
-    // ,{State:'ENERC_KCAL',freq:{}}
-    ];
+// var nutrientData=[
+//     {State:'FAT_KCAL',freq:{}}
+//     ,{State:'FASAT',freq:{}}
+//     ,{State:'FOLDFE',freq:{}}
+//     // ,{State:'ENERC_KJ',freq:{}}
+//     ,{State:'WATER',freq:{}}
+//     ,{State:'FAMS',freq:{}}
+//     ,{State:'FIBTG',freq:{}}
+//     ,{State:'PROCNT',freq:{}}
+//     ,{State:'CHOCDF',freq:{}}
+//     ,{State:'CHOLE',freq:{}}
+//     ,{State:'FAPU',freq:{}}
+//     // ,{State:'VITA_IU',freq:{}}
+//     // ,{State:'ENERC_KCAL',freq:{}}
+//     ];
+var nutrientData = window.nutrientData;
+console.log(nutrientData)
 
  $("#tabs-swipe-demo li").click(function (e) {
    console.log(e)
-nutrientData=[
-    {State:'FAT_KCAL',freq:{}}
-    ,{State:'FASAT',freq:{}}
-    ,{State:'FOLDFE',freq:{}}
-    // ,{State:'ENERC_KJ',freq:{}}
-    ,{State:'WATER',freq:{}}
-    ,{State:'FAMS',freq:{}}
-    ,{State:'FIBTG',freq:{}}
-    ,{State:'PROCNT',freq:{}}
-    ,{State:'CHOCDF',freq:{}}
-    ,{State:'CHOLE',freq:{}}
-    ,{State:'FAPU',freq:{}}
-    // ,{State:'VITA_IU',freq:{}}
-    // ,{State:'ENERC_KCAL',freq:{}}
-    ];
+// nutrientData=[
+//     {State:'FAT_KCAL',freq:{}}
+//     ,{State:'FASAT',freq:{}}
+//     ,{State:'FOLDFE',freq:{}}
+//     // ,{State:'ENERC_KJ',freq:{}}
+//     ,{State:'WATER',freq:{}}
+//     ,{State:'FAMS',freq:{}}
+//     ,{State:'FIBTG',freq:{}}
+//     ,{State:'PROCNT',freq:{}}
+//     ,{State:'CHOCDF',freq:{}}
+//     ,{State:'CHOLE',freq:{}}
+//     ,{State:'FAPU',freq:{}}
+//     // ,{State:'VITA_IU',freq:{}}
+//     // ,{State:'ENERC_KCAL',freq:{}}
+//     ];
     console.log(nutrientData)
  })
 
 // add recipe to database
 $(document).on('click', '.add', function(event) {
-var addRecipe = window.recipeInfo;
-
+  if(counter === 0){
+  var addRecipe = window.recipeInfo;
+console.log(addRecipe)
   // add chips to calendar
   var ref_this = $("ul.tabs li a.active");
-  console.log(ref_this[0].id+'-'+event.target.id);
   addRecipe.calendar = `${ref_this[0].id}-${event.target.id}`;
 
-  $('#'+ref_this[0].id+'-'+event.target.id).append(`  <div class="chip">
-    ${document.getElementById("recipeName").innerHTML}
+
+// ## extract recipe id
+// var recipeID = $('#selectRecipe div:first').children().attr('id');
+// console.log(recipeID)
+//   var url = `/search/${recipeID}/`
+
+  $('#'+ref_this[0].id+'-'+event.target.id).append(`  <div class="chip" id=${addRecipe.recipeID}>
+    ${addRecipe.name}
     <i class="close material-icons">close</i>
   </div>`)
 
-// ## extract recipe id
-var recipeID = $('#selectRecipe div:first').children().attr('id');
-console.log(recipeID)
-  var url = `/search/${recipeID}/`
-
-  API.getRecipe(url).then(res => {
-    console.log(res.nutritionEstimates.length)
-    console.log(res.nutritionEstimates)
-
-if(res.nutritionEstimates.length >1){
-
+//  make piechart
+console.log(addRecipe.nutritionEstimates)
+if(addRecipe.nutritionEstimates !== null){
+var nutrientData = window.nutrientData;
+var nutritionEstimates = JSON.parse(addRecipe.nutritionEstimates)
+console.log(nutrientData)
   for (let i = 0; i < nutrientData.length; i++) {
-  nutrientData[i].freq[recipeID] =  res.nutritionEstimates.filter(d => {
+  nutrientData[i].freq[addRecipe.recipeID] =  nutritionEstimates.filter(d => {
   return d.attribute === nutrientData[i].State
   })[0].value
   }
-  addRecipe.nutrientData = JSON.stringify(nutrientData);
+  addRecipe.nutritionEstimates = JSON.stringify(nutrientData);
   $('#piechart').empty();
-  dashboard('#piechart', nutrientData);
-} else {
-  addRecipe.nutrientData = null
+  dashboard('#piechart', nutrientData); 
 }
 
+console.log(addRecipe)
 // post recipe to database
   $.ajax({
       headers: {
@@ -322,11 +334,30 @@ if(res.nutritionEstimates.length >1){
       },
       type: "POST",
       url: "api/recipes",
-      data: JSON.stringify(window.recipeInfo)
+      data: JSON.stringify(addRecipe)
     })
 
+//   API.getRecipe(url).then(res => {
+//     console.log(res.nutritionEstimates.length)
+//     console.log(res.nutritionEstimates)
 
-  })
+// if(res.nutritionEstimates.length >1){
+// var nutrientData = window.nutrientData;
+//   for (let i = 0; i < nutrientData.length; i++) {
+//   nutrientData[i].freq[recipeID] =  res.nutritionEstimates.filter(d => {
+//   return d.attribute === nutrientData[i].State
+//   })[0].value
+//   }
+//   addRecipe.nutrientData = JSON.stringify(nutrientData);
+//   $('#piechart').empty();
+//   dashboard('#piechart', nutrientData);
+// } else {
+//   addRecipe.nutrientData = null
+// }
+//   })
+  }
+  counter++
+console.log(counter)
 
 })
 

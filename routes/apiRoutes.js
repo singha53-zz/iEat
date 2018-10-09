@@ -118,10 +118,19 @@ app.get("/search/:recipe", function(req, res) {
     });
   });
 
+    // get an example by id
+  app.get("/api/recipe/:id", function(req, res) {
+    console.log(req.body.dataValues)
+    db.addRecipe.findOne({ where: { recipeID: req.params.id } }).then(function(recipe) {
+      res.json(recipe);
+    });
+  });
+
   // Delete an example by id
-  app.delete("/api/examples/:id", function(req, res) {
-    db.Allergy.destroy({ where: { id: req.params.id } }).then(function(dbExample) {
-      res.json(dbExample);
+  app.delete("/api/recipe/:id", function(req, res) {
+    console.log(req.body.dataValues)
+    db.addRecipe.destroy({ where: { recipeID: req.params.id } }).then(function(recipes) {
+      res.json(recipes);
     });
   });
 
