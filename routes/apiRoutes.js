@@ -31,11 +31,13 @@ var url = `https://api.yummly.com/v1/api/recipes?_app_id=6fe80130&_app_key=e4747
       .map(allergy => {
         return '&allowedAllergy[]=' + allergy;
       })
-      .join('')}`;
+      .join('')}&maxResult=15`;
     console.log(url);
 
   axios.get(url)
   .then(function(response) {
+   console.log(response.data.matches)
+
     res.json(response.data)
   })
   });
@@ -56,30 +58,63 @@ app.get("/search/:recipe", function(req, res) {
   })
 })
 
-  // Get all examples
-  app.get("/api/recipes", function(req, res) {
-    db.Allergy.findAll({}).then(function(result) {
+  // Get all favourite recipes
+  app.get("/api/favRecipes", function(req, res) {
+    db.favRecipe.findAll({
+      where: {
+        userId: req.user.id
+      }
+    }).then(function(result) {
       res.json(result);
     });
   });
 
-  // Create a new example
-  app.post("/api/recipes", function(req, res) {
-    console.log('server:' + req.body)
+  // Create a new favourite recipe
+  app.post("/api/favRecipes", function(req, res) {
+    console.log('server:' + JSON.stringify(req.body))
+    console.log('req.user:'+ JSON.stringify(req.user))
 
-  db.Allergy.create({
-    meal: req.body.meal,
-    allergy: JSON.stringify(req.body.allergy)
-  }).then(function(result) {
+    var recipe = req.body;
+    recipe.userId = req.user.id
+    console.log(recipe)
+    // recipe.userId = req.user.id
+  db.favRecipe.create(recipe).then(function(result) {
+    console.log(result)
       res.json(result)
-    });
-    res.redirect('/search')
+    }).catch(err =>{
+      console.log(err)
+    })
+    // res.redirect('/dashboard')
   });
+  
+  // Create a new recipe
+  app.post("/api/recipes", function(req, res) {
+    var recipe = req.body;
+    recipe.userId = req.user.id
+  db.addRecipe.create(recipe).then(function(result) {
+    console.log(result)
+      res.json(result)
+    }).catch(err =>{
+      console.log(err)
+    })
+  });
+
+//get all added recipes
+  app.get("/api/recipes", function(req, res) {
+    db.addRecipe.findAll({
+      where: {
+        userId: req.user.id
+      }
+    }).then(function(result) {
+      res.json(result);
+    });
+  });
+
 
   // get search
-  app.get("/search", function(req, res) {
-    db.Allergy.findAll({}).then(function(result) {
-      res.json(result);
+  app.get("/fav", function(req, res) {
+    db.favRecipe.findAll({}).then(function(result) {
+      res.json(result.map(d => d.name));
     });
   });
 
@@ -89,4 +124,6 @@ app.get("/search/:recipe", function(req, res) {
       res.json(dbExample);
     });
   });
+
+
 };

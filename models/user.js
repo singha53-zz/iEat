@@ -49,6 +49,18 @@ module.exports = function(sequelize, Sequelize) {
  
  
     });
+
+    User.associate = function(models) {
+    // Associating User with Recipes
+    // When an User is deleted, also delete any associated recipes
+    User.hasMany(models.favRecipe, {
+      onDelete: "cascade",
+      foreignKey: {
+          name: "userId",
+          allowNull: false
+      }
+    });
+    };
  
     return User;
  
