@@ -25,8 +25,16 @@ module.exports = function(sequelize, Sequelize) {
             type: Sequelize.INTEGER,
             notEmpty: true
         },
+        imageUrl: {
+            type: Sequelize.STRING,
+            notEmpty: true
+        },
         recipeUrl: {
             type: Sequelize.STRING,
+            notEmpty: true
+        },
+        nutritionEstimates: {
+            type: Sequelize.TEXT,
             notEmpty: true
         }
   });
