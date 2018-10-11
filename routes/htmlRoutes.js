@@ -8,6 +8,13 @@ module.exports = function(app) {
     // });
   });
 
+   // Load index page
+  app.get("/summary", function(req, res) {
+    // db.Allergy.findAll({}).then(function(dbExamples) {
+      res.render("summary");
+    // });
+  });
+
   // Load example page and pass in an example by id
   app.get("/example/:id", function(req, res) {
     db.Example.findOne({ where: { id: req.params.id } }).then(function(dbExample) {
